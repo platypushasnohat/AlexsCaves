@@ -13,10 +13,12 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -124,8 +126,14 @@ public class MagneticWeaponEntity extends Entity {
                     this.comingBack = true;
                 }
             }
-            directMovementTowards(vec3, 0.1F);
-            if (this.distanceTo(controller) < 2.5F && this.getY() > controller.getY()) {
+
+            directMovementTowards(vec3, 0.08F);
+
+            if (target != null && target.isAlive() && controller.distanceTo(target) > 16.0F) {
+                this.comingBack = true;
+            }
+
+            if (this.distanceTo(controller) < 3.0F && this.getY() > controller.getY()) {
                 this.entityData.set(IDLING, true);
                 if (this.comingBack) {
                     this.comingBack = false;
@@ -330,6 +338,34 @@ public class MagneticWeaponEntity extends Entity {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
         f = event.isCanceled() ? -1 : event.getNewSpeed();
         return f;
+    }
+
+    @Override
+    public boolean isAttackable() {
+        return !this.isRemoved() && !this.comingBack && !this.entityData.get(IDLING);
+    }
+
+    @Override
+    public boolean isPickable() {
+        return !this.isRemoved();
+    }
+
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        return this.getItemStack();
+    }
+
+    // hit the weapon to return to sender
+    @Override
+    public boolean hurt(DamageSource damageSource, float damageValue) {
+        if (this.isInvulnerableTo(damageSource)) {
+            return false;
+        } else {
+            this.playSound(SoundEvents.ITEM_BREAK);
+            this.comingBack = true;
+            return true;
+        }
     }
 
     private void hurtEntity(LivingEntity holder, Entity target) {
