@@ -162,8 +162,8 @@ public class QuarrySmasherEntity extends Entity {
                                 level().playSound(null, targetPos, ACSoundRegistry.BOUNDROID_SLAM.get(), SoundSource.BLOCKS, 1.5F, 1.0F);
                                 level().destroyBlock(targetPos, true);
                                 this.setTargetPos(null);
-                                blockBreakCooldown = 35;
-                                this.setPullingItemsFor(20);
+                                blockBreakCooldown = 7;
+                                this.setPullingItemsFor(4);
                             }
                         }
                     } else {
@@ -260,12 +260,12 @@ public class QuarrySmasherEntity extends Entity {
 
     public void tickMultipart() {
         Vec3 headTarget = getHeadTargetPos();
-        float fallSpeed = 0.05F;
+        float fallSpeed = 0.25F;
         if (isInactive()) {
             fallSpeed = 0.5F;
         } else if (isSlamming()) {
-            fallSpeed = getHeadGroundProgress(1.0F) * 0.3F;
-        } else if (this.pullingItemsFor() > 5) {
+            fallSpeed = getHeadGroundProgress(1.0F);
+        } else if (this.pullingItemsFor() > 1) {
             fallSpeed = 0.0F;
         }
         Vec3 moveHeadBy = headTarget.subtract(this.headPart.position()).scale(fallSpeed);
