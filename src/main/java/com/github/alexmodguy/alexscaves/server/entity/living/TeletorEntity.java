@@ -162,7 +162,7 @@ public class TeletorEntity extends Monster {
             this.entityData.set(WEAPON_ID, magneticWeapon.getId());
             magneticWeapon.setControllerUUID(this.getUUID());
             Entity e = magneticWeapon.getTarget();
-            boolean control = e != null && e.isAlive();
+            boolean control = e != null && e.isAlive() && this.distanceTo(e) <= 18.0F;
             if (control && controlProgress < 5F) {
                 controlProgress++;
             }

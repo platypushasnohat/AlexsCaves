@@ -5,6 +5,7 @@ import com.github.alexmodguy.alexscaves.server.entity.ACEntityRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.living.TeletorEntity;
 import com.github.alexmodguy.alexscaves.server.item.ACItemRegistry;
 import com.github.alexmodguy.alexscaves.server.misc.ACAdvancementTriggerRegistry;
+import com.github.alexmodguy.alexscaves.server.misc.ACSoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -13,10 +14,12 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -120,12 +123,18 @@ public class MagneticWeaponEntity extends Entity {
                         hurtEntity(teletor, target);
                         this.comingBack = true;
                     }
-                } else if (want.length() > 32) {
+                }
+                else if (want.length() > 32) {
+                    this.comingBack = true;
+                }
+
+                else if (target.isAlive() && controller.distanceTo(target) > 18.0F) {
                     this.comingBack = true;
                 }
             }
             directMovementTowards(vec3, 0.1F);
-            if (this.distanceTo(controller) < 2.5F && this.getY() > controller.getY()) {
+
+            if (this.distanceTo(controller) < 3.0F && this.getY() > controller.getY()) {
                 this.entityData.set(IDLING, true);
                 if (this.comingBack) {
                     this.comingBack = false;
@@ -363,6 +372,34 @@ public class MagneticWeaponEntity extends Entity {
             if(living.getHealth() <= 0.0F && player.distanceTo(target) >= 19.5F){
                 ACAdvancementTriggerRegistry.KILL_MOB_WITH_GALENA_GAUNTLET.get().triggerForEntity(player);
             }
+        }
+    }
+
+    @Override
+    public boolean isAttackable() {
+        return !this.isRemoved() && !this.comingBack && !this.entityData.get(IDLING);
+    }
+
+    @Override
+    public boolean isPickable() {
+        return !this.isRemoved();
+    }
+
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        return this.getItemStack();
+    }
+
+    // hit the weapon to return to sender
+    @Override
+    public boolean hurt(DamageSource damageSource, float damageValue) {
+        if (this.isInvulnerableTo(damageSource)) {
+            return false;
+        } else {
+            this.playSound(ACSoundRegistry.GALENA_GAUNTLET_STOP.get(), 0.8F, this.getRandom().nextFloat() * 0.4F + 0.9F);
+            this.comingBack = true;
+            return true;
         }
     }
 
