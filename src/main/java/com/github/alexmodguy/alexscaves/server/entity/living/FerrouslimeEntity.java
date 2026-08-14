@@ -131,8 +131,8 @@ public class FerrouslimeEntity extends Monster {
             }
         } else {
             LivingEntity target = this.getTarget();
-            if (attackProgress >= 3F && target != null && this.distanceTo(target) < getSlimeSize(1.0F)) {
-                target.hurt(damageSources().mobAttack(this), 4F + getHeadCount() * 2);
+            if (attackProgress >= 3F && target != null && this.distanceTo(target) < this.getSlimeSize(1.0F) + 1.0F) {
+                target.hurt(damageSources().mobAttack(this), 4F + this.getHeadCount() * 2);
             }
             if (attackProgress > 0F) {
                 attackProgress--;
@@ -286,11 +286,6 @@ public class FerrouslimeEntity extends Monster {
         return (prevAttackProgress + (attackProgress - prevAttackProgress) * partialTicks) * 0.2F;
     }
 
-    public boolean doHurtTarget(Entity entityIn) {
-        this.entityData.set(ATTACK_TICK, 10);
-        return super.doHurtTarget(entityIn);
-    }
-
     private boolean canForm() {
         return this.isAlive() && mergeCooldown <= 0;
     }
@@ -380,7 +375,7 @@ public class FerrouslimeEntity extends Monster {
                 FerrouslimeEntity.this.getNavigation().moveTo(target, 1F);
                 FerrouslimeEntity.this.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
                 if (FerrouslimeEntity.this.distanceTo(target) < 1 + FerrouslimeEntity.this.getSlimeSize(1.0F) && FerrouslimeEntity.this.hasLineOfSight(target) && cooldown == 0) {
-                    FerrouslimeEntity.this.doHurtTarget(target);
+                    FerrouslimeEntity.this.entityData.set(ATTACK_TICK, 10);
                     cooldown = 10;
                 }
             }
