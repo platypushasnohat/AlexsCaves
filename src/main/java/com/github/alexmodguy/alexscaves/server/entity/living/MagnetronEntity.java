@@ -729,6 +729,7 @@ public class MagnetronEntity extends Monster {
 
     private class MeleeGoal extends Goal {
 
+        private boolean hasHitTarget = false;
         private int punchCooldown = 0;
 
         public MeleeGoal() {
@@ -743,6 +744,7 @@ public class MagnetronEntity extends Monster {
 
         public void start() {
             punchCooldown = 0;
+            hasHitTarget = false;
         }
 
         public void stop() {
@@ -776,8 +778,9 @@ public class MagnetronEntity extends Monster {
                                 MagnetronEntity.this.setAttackPose(set);
                                 punchCooldown = set == AttackPose.SLAM ? 15 : 10;
                             }
-                        } else if (trueDist < 7.5F && MagnetronEntity.this.getAttackPoseProgress(1.0F) >= 0.9F) {
+                        } else if (trueDist < 7.5F && MagnetronEntity.this.getAttackPoseProgress(1.0F) >= 0.9F && !hasHitTarget) {
                             dealDamage(target, MagnetronEntity.this.getAttackPose());
+                            hasHitTarget = true;
                         }
                     }
                 }
@@ -789,6 +792,7 @@ public class MagnetronEntity extends Monster {
                 MagnetronEntity.this.setYRot(targetYRot);
             }
             if (MagnetronEntity.this.getAttackPose() != AttackPose.NONE && punchCooldown == 0) {
+                hasHitTarget = false;
                 MagnetronEntity.this.setAttackPose(AttackPose.NONE);
             }
         }
