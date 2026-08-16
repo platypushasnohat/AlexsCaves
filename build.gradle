@@ -19,6 +19,10 @@ repositories {
         }
     }
     maven {
+        name = "ModrinthMaven"
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
@@ -70,6 +74,10 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+
+    // Jade compat
+    implementation "maven.modrinth:jade:15.10.6+neoforge"
+
     // Citadel dependency - local jar from sibling project
     implementation files('../Citadel/build/libs/citadel-1.21.1-2.7.1.jar')
 }
