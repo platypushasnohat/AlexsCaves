@@ -331,11 +331,7 @@ public class CaramelCubeEntity extends Monster implements PossessedByLicowitch {
             super.dropFromLootTable(source, b);
         }
     }
-
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return 0.5F * dimensions.height();
-    }
-
+    
     public int getExperienceReward() {
         return 2;
     }
