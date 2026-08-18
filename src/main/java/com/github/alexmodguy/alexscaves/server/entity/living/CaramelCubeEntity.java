@@ -49,11 +49,11 @@ public class CaramelCubeEntity extends Monster implements PossessedByLicowitch {
     private float jiggleTime;
     private float prevJiggleTime;
 
-    protected static final EntityDimensions SMALL_DIMENSIONS = EntityDimensions.fixed(0.8F, 0.8F);
+    protected static final EntityDimensions SMALL_DIMENSIONS = EntityDimensions.fixed(0.8F, 0.8F).withEyeHeight(0.4F);
 
-    protected static final EntityDimensions MEDIUM_DIMENSIONS = EntityDimensions.fixed(1.5F, 1.5F);
+    protected static final EntityDimensions MEDIUM_DIMENSIONS = EntityDimensions.fixed(1.5F, 1.5F).withEyeHeight(0.75F);
 
-    protected static final EntityDimensions LARGE_DIMENSIONS = EntityDimensions.fixed(3.5F, 3.5F);
+    protected static final EntityDimensions LARGE_DIMENSIONS = EntityDimensions.fixed(3.5F, 3.5F).withEyeHeight(1.75F);
 
     public CaramelCubeEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
