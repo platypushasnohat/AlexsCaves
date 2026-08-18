@@ -285,8 +285,7 @@ public class CaramelCubeEntity extends Monster implements PossessedByLicowitch {
 
     // 1.21: getDimensions(Pose) is now final in LivingEntity and cannot be overridden.
     // Dimensions are now handled via EntityType.Builder.dimensions() or getDefaultDimensions().
-    // This method is kept for reference but renamed to avoid compilation errors.
-    private EntityDimensions getCustomDimensions(Pose pose) {
+    public EntityDimensions getDefaultDimensions(Pose pose) {
         switch (this.getSlimeSize()) {
             case 2:
                 return LARGE_DIMENSIONS;
