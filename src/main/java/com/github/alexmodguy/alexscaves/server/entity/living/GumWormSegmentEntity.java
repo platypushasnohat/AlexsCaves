@@ -227,12 +227,6 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     @Override
-    public boolean isPickable() {
-        Entity head = this.getHeadEntity();
-        return head != null && head.isPickable();
-    }
-
-    @Override
     public boolean hurt(DamageSource source, float amount) {
         Entity head = this.getHeadEntity();
         if (!this.isInvulnerableTo(source) && head != null) {
@@ -590,8 +584,15 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
         return (this.getRemovalReason() == null || this.getRemovalReason().shouldSave()) && !this.isPassenger();
     }
 
+    @Override
+    public boolean isPickable() {
+        Entity head = this.getHeadEntity();
+        return head != null && head.isPickable();
+    }
+
+    @Override
     public ItemStack getPickResult() {
-        return new ItemStack(ACItemRegistry.getSpawnEggFor(ACEntityRegistry.GUM_WORM.get()));
+        return this.getHeadEntity().getPickResult();
     }
 
     @Override
