@@ -56,7 +56,7 @@ public class PrimordialArmorModel extends HumanoidModel {
     }
 
     public PrimordialArmorModel withAnimations(LivingEntity entity) {
-        float partialTick = Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
+        float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         float limbSwingAmount = entity.walkAnimation.speed(partialTick);
         float minLeg = Math.min(this.rightLeg.xRot, this.leftLeg.xRot);
         float maxLeg = Math.max(this.rightLeg.xRot, this.leftLeg.xRot);
